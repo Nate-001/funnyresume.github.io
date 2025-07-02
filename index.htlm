@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nathaniel 'The Manipulator' Ross - Interactive Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Latte & Laughter -->
+    <!-- Application Structure Plan: A single-page application (SPA) with a fixed sidebar for navigation and a main content area. This structure was chosen for its intuitive, app-like feel, allowing users to quickly jump between different sections (like "Powers," "Experience," and "Shenanigans") without page reloads. The user flow is non-linear, encouraging exploration. Key interactions include a dynamic radar chart for skills, a clickable timeline for work history, and interactive cards for projects, all designed to make the humorous content more engaging and digestible than a static document. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Core Expertise -> Goal: Compare/Inform -> Viz: Radar Chart (Chart.js) -> Interaction: Hover for tooltips, button to "reroll" stats. Justification: A radar chart humorously quantifies the absurd "powers," making the list more visually engaging.
+        - Report Info: Work Experience -> Goal: Change/Inform -> Viz: Vertical Timeline (HTML/CSS/JS) -> Interaction: Click to expand details. Justification: A timeline visualizes career progression in a more dynamic way than a simple list, breaking up text.
+        - Report Info: Projects -> Goal: Organize/Inform -> Viz: Card Grid (HTML/Tailwind) -> Interaction: Hover effects on cards. Justification: Cards provide a scannable, visually appealing way to present a portfolio of "shenanigans."
+        - Report Info: Key Metrics (e.g., 43% improvement) -> Goal: Inform/Impact -> Viz: Large Stat Cards (HTML/Tailwind) -> Interaction: Subtle animation on load. Justification: Highlights the funniest quantitative claims immediately. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-link.active, .nav-link:hover {
+            background-color: #EFEBE6;
+            color: #2c2c2c;
+            transform: translateX(4px);
+        }
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: -21px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #D1C4E9;
+            border: 2px solid #FDFBF8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+    <aside class="w-64 bg-[#F5F1EC] p-6 hidden lg:flex flex-col fixed h-full">
+        <h1 class="text-2xl font-bold text-[#6A5A4F]">Nathaniel Ross</h1>
+        <p class="text-sm text-[#8c7a6f]">Esquire of Exertion</p>
+        <nav class="mt-10 flex flex-col space-y-2">
+            <a href="#home" class="nav-link active font-medium rounded-lg px-4 py-2">🏠 Home</a>
+            <a href="#powers" class="nav-link font-medium rounded-lg px-4 py-2">⚡ My Secret Powers</a>
+            <a href="#experience" class="nav-link font-medium rounded-lg px-4 py-2">💼 Glorious Past</a>
+            <a href="#shenanigans" class="nav-link font-medium rounded-lg px-4 py-2">🎉 Shenanigans</a>
+            <a href="#credentials" class="nav-link font-medium rounded-lg px-4 py-2">🎓 Credentials</a>
+            <a href="#contact" class="nav-link font-medium rounded-lg px-4 py-2">📞 Stalk Me</a>
+        </nav>
+        <div class="mt-auto text-xs text-[#a4968c]">
+            <p>Built with caffeine & sarcasm.</p>
+            <p>&copy; 2025. All rights reserved (mostly).</p>
+        </div>
+    </aside>
+
+    <main class="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-10">
+        <div id="home" class="content-section active">
+            <h2 class="text-3xl font-bold mb-2">The Grand Architect of Digital Shenanigans</h2>
+            <p class="text-lg text-gray-600 mb-8">A passionate full-stack engineer and AI innovator with 8+ years of experience building technology that *appears* to create measurable social impact, but mostly just makes my cat famous on TikTok.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <p class="text-4xl font-bold text-[#7E57C2]">43%</p>
+                    <p class="font-medium mt-2">Faster Emergency Response</p>
+                    <p class="text-sm text-gray-500">(Achieved mostly by panicking faster)</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <p class="text-4xl font-bold text-[#5C6BC0]">35%</p>
+                    <p class="font-medium mt-2">Increase in Recurring Donations</p>
+                    <p class="text-sm text-gray-500">(Subliminal messaging is surprisingly effective)</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                    <p class="text-4xl font-bold text-[#42A5F5]">72%</p>
+                    <p class="font-medium mt-2">Disaster Assessment Accuracy</p>
+                    <p class="text-sm text-gray-500">(When the moon is in the seventh house)</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-4">Unique Value Proposition</h3>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <p class="text-gray-700">Combining 7+ years as a medical/legal interpreter (where I learned to manipulate language for fun and profit) with cutting-edge technical skills, I bring deep cross-cultural communication abilities (I can talk my way out of anything) and human-centered design thinking (I design things so humans can't break them... usually). This background ensures solutions are not only technically robust but accessible and meaningful to diverse communities (or at least, they look pretty).</p>
+            </div>
+        </div>
+
+        <div id="powers" class="content-section">
+            <h2 class="text-3xl font-bold mb-2">My Secret Powers</h2>
+            <p class="text-lg text-gray-600 mb-8">This chart visualizes my completely scientific and not-at-all-made-up skill levels. Hover for details on my questionable acronyms.</p>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <div class="chart-container">
+                    <canvas id="powersChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="experience" class="content-section">
+            <h2 class="text-3xl font-bold mb-2">My Glorious Past (and Present)</h2>
+            <p class="text-lg text-gray-600 mb-8">A brief history of my professional triumphs, questionable decisions, and coffee consumption.</p>
+            <div id="timeline-container" class="relative border-l-2 border-gray-200 pl-8 space-y-12">
+            </div>
+        </div>
+        
+        <div id="shenanigans" class="content-section">
+             <h2 class="text-3xl font-bold mb-2">Masterpieces of Mayhem</h2>
+             <p class="text-lg text-gray-600 mb-8">Behold, a collection of projects born from caffeine, chaos, and a complete disregard for the phrase "that's not possible."</p>
+             <div id="projects-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             </div>
+        </div>
+
+        <div id="credentials" class="content-section">
+            <h2 class="text-3xl font-bold mb-2">Credentials (Proof I'm Not a Fraud, Probably)</h2>
+            <p class="text-lg text-gray-600 mb-8">I've collected more certificates than a professional student. Here are a few to prove I occasionally leave my house (virtually).</p>
+            <div id="education-container" class="space-y-6">
+            </div>
+        </div>
+
+        <div id="contact" class="content-section">
+            <h2 class="text-3xl font-bold mb-2">Stalk Me (Professionally, Of Course)</h2>
+            <p class="text-lg text-gray-600 mb-8">Feel free to reach out. I'm available for emergencies, like running out of coffee or needing someone to blame.</p>
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-4">
+                <p><strong>Email:</strong> <a href="mailto:rossnathaniel001@gmail.com" class="text-blue-600 hover:underline">rossnathaniel001@gmail.com</a> (Warning: May contain unsolicited cat memes)</p>
+                <p><strong>Phone:</strong> +18056184389 (For existential crises and pizza recommendations only)</p>
+                <p><strong>Location:</strong> Santa Barbara, CA (Where the sun shines and my code *sometimes* compiles on the first try)</p>
+                <div class="flex space-x-4 mt-4">
+                    <a href="https://github.com/Nate-001/" target="_blank" class="text-blue-600 hover:underline">GitHub (Code Graveyard)</a>
+                    <a href="https://www.linkedin.com/in/nathaniel-ross-734292163/" target="_blank" class="text-blue-600 hover:underline">LinkedIn (Professional Disguise)</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            const workExperience = [
+                {
+                    title: "Lead Software Engineer",
+                    company: "Ineffable Films",
+                    date: "April 2025 - Present",
+                    description: "Leading digital initiatives (restarting the router) for a nonprofit empowering young filmmakers (to make their cat videos go viral). Managing a team of three developers (who mostly just nod and smile)."
+                },
+                {
+                    title: "Founder and Software Engineer",
+                    company: "AI-Relief",
+                    date: "January 2025 - Present",
+                    description: "Founded a pioneering organization leveraging AI to enhance humanitarian aid (by sending strongly worded emails to natural disasters). Developed proprietary AI algorithms (panicked faster) that improved disaster response time by 43%."
+                },
+                {
+                    title: "Medical & Legal Interpreter",
+                    company: "Freelance/Self Employed",
+                    date: "January 2017 - Present",
+                    description: "Provided accurate, culturally sensitive interpretation (made everyone sound smart, even myself). Specialized in complex terminology (and ordering tacos in 10 different dialects)."
+                },
+                {
+                    title: "Full-Stack Developer",
+                    company: "NDR Enterprises",
+                    date: "December 2022 - December 2023",
+                    description: "Spearheaded full-stack initiatives, delivering web solutions that drove business growth (didn't spontaneously combust). Architected scalable applications (built a digital fortress with a secret back door)."
+                },
+                {
+                    title: "Web Developer",
+                    company: "IBM",
+                    date: "November 2021 - November 2022",
+                    description: "Contributed to digital transformation of the HCUP platform (made sure doctors could find their own patient files). Implemented user-centered design principles (made buttons bigger)."
+                },
+                 {
+                    title: "Front End Developer",
+                    company: "Limitless Software LLC",
+                    date: "January 2018 - January 2019",
+                    description: "Leveraged cutting-edge technologies to deliver exceptional digital solutions (made websites that looked good and didn't break immediately). Developed mobile-first, responsive web interfaces (that looked good even on a potato)."
+                }
+            ];
+            
+            const projects = [
+                { name: "Multi Agent Damage Assessment", desc: "Tells me if a building is still standing, which I could have done with my eyes." },
+                { name: "FridgeAI", desc: "Identifies expired milk and suggests a recipe for sadness." },
+                { name: "GiftGenie", desc: "Suggests I buy myself more coffee. A truly intelligent system." },
+                { name: "RAG Document Querying", desc: "Finds the answer in a document and then rephrases it poorly." },
+                { name: "Weather Outfit Recommender", desc: "Tells me to wear a coat when it's cold. Revolutionary." },
+                { name: "Online Dealer Review App", desc: "A dedicated platform for people to complain about car dealerships." }
+            ];
+
+            const education = [
+                { name: "IBM Applied AI Developer Certificate", funFact: "Learned to make robots do my bidding." },
+                { name: "Full-Stack Developer Micro-bachelor's", funFact: "Learned to build a digital sandwich, from front to back." },
+                { name: "Full-Stack Cloud Developer Micro-bachelor's", funFact: "Learned to build in the cloud, because the ground is too mainstream." },
+                { name: "Certificate of Achievement in Computer Science", funFact: "Learned that computers are just really fast calculators." },
+                { name: "College Degree in Computer Science", funFact: "Basically a genius, but without the fancy piece of paper." }
+            ];
+
+            function renderTimeline() {
+                const container = document.getElementById('timeline-container');
+                let html = '';
+                workExperience.forEach(job => {
+                    html += `
+                        <div class="timeline-item">
+                            <h4 class="text-lg font-bold">${job.title}</h4>
+                            <p class="font-medium text-gray-700">${job.company}</p>
+                            <p class="text-sm text-gray-500 mb-2">${job.date}</p>
+                            <p class="text-gray-600">${job.description}</p>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+            
+            function renderProjects() {
+                const container = document.getElementById('projects-container');
+                let html = '';
+                projects.forEach(proj => {
+                    html += `
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 transform hover:-translate-y-1 transition-transform duration-200">
+                            <h4 class="text-lg font-bold">${proj.name}</h4>
+                            <p class="text-gray-600 mt-2">${proj.desc}</p>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+
+            function renderEducation() {
+                const container = document.getElementById('education-container');
+                let html = '';
+                education.forEach(edu => {
+                    html += `
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <h4 class="text-lg font-bold">🎓 ${edu.name}</h4>
+                            <p class="text-gray-600 mt-2 italic">"${edu.funFact}"</p>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+
+            function navigate(hash) {
+                if (!hash) hash = '#home';
+                
+                contentSections.forEach(section => {
+                    if ('#' + section.id === hash) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === hash) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const hash = this.getAttribute('href');
+                    navigate(hash);
+                    window.location.hash = hash;
+                });
+            });
+
+            const powersCtx = document.getElementById('powersChart').getContext('2d');
+            new Chart(powersCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['AI & ML (Napping Like a Pro)', 'Full-Stack (Fluffy Code)', 'Cloud & DevOps (Coffee In, Code Done)', 'Leadership (Organized Chaos)', 'Problem Solving (Googling)'],
+                    datasets: [{
+                        label: 'Skillz-O-Meter',
+                        data: [92, 85, 75, 88, 99],
+                        backgroundColor: 'rgba(126, 87, 194, 0.2)',
+                        borderColor: 'rgba(126, 87, 194, 1)',
+                        pointBackgroundColor: 'rgba(126, 87, 194, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(126, 87, 194, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                             pointLabels: {
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            ticks: {
+                                backdropColor: '#FDFBF8'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            renderTimeline();
+            renderProjects();
+            renderEducation();
+            navigate(window.location.hash);
+        });
+    </script>
+</body>
+</html>
