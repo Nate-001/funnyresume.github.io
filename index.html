@@ -56,16 +56,16 @@
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 700px;
-            height: 600px;
+            max-width: 800px; /* Increased max-width significantly */
+            height: 700px; /* Increased height significantly */
             margin-left: auto;
             margin-right: auto;
-            transform: scale(0.8);
-            overflow: visible;
+            /* Removed transform: scale(0.8); */
+            overflow: visible; /* Ensure labels are not clipped */
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 600px; /* Adjusted height for larger screens */
+                height: 700px; /* Adjusted height for larger screens */
             }
         }
         /* Mobile navigation specific styles */
@@ -527,7 +527,7 @@
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false, /* Changed to false */
+                    maintainAspectRatio: false,
                     scales: {
                         r: {
                             angleLines: {
