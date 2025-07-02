@@ -56,15 +56,16 @@
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 500px;
+            max-width: 700px;
+            height: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 350px;
-            max-height: 400px;
+            transform: scale(0.8);
+            overflow: visible;
         }
         @media (min-width: 768px) {
             .chart-container {
-                height: 400px;
+                height: 600px; /* Adjusted height for larger screens */
             }
         }
         /* Mobile navigation specific styles */
@@ -95,6 +96,21 @@
         .mobile-nav-sidebar.active {
             left: 0;
         }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #7E57C2;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="flex min-h-screen">
@@ -112,6 +128,7 @@
             <a href="#powers" class="nav-link font-medium rounded-lg px-4 py-2">⚡ My Secret Powers</a>
             <a href="#experience" class="nav-link font-medium rounded-lg px-4 py-2">💼 Glorious Past</a>
             <a href="#shenanigans" class="nav-link font-medium rounded-lg px-4 py-2">🎉 Shenanigans</a>
+            <a href="#gemini-insights" class="nav-link font-medium rounded-lg px-4 py-2">✨ Gemini's Insights</a>
             <a href="#credentials" class="nav-link font-medium rounded-lg px-4 py-2">🎓 Credentials</a>
             <a href="#contact" class="nav-link font-medium rounded-lg px-4 py-2">📞 Stalk Me</a>
         </nav>
@@ -130,6 +147,7 @@
             <a href="#powers" class="nav-link font-medium rounded-lg px-4 py-2">⚡ My Secret Powers</a>
             <a href="#experience" class="nav-link font-medium rounded-lg px-4 py-2">💼 Glorious Past</a>
             <a href="#shenanigans" class="nav-link font-medium rounded-lg px-4 py-2">🎉 Shenanigans</a>
+            <a href="#gemini-insights" class="nav-link font-medium rounded-lg px-4 py-2">✨ Gemini's Insights</a>
             <a href="#credentials" class="nav-link font-medium rounded-lg px-4 py-2">🎓 Credentials</a>
             <a href="#contact" class="nav-link font-medium rounded-lg px-4 py-2">📞 Stalk Me</a>
         </nav>
@@ -198,6 +216,31 @@
              </div>
         </div>
 
+        <div id="gemini-insights" class="content-section">
+            <h2 class="text-3xl font-bold mb-2">✨ Gemini's Insights</h2>
+            <p class="text-lg text-gray-600 mb-8">Let the AI reveal the deepest, most absurd truths about Nathaniel's professional existence.</p>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
+                <h3 class="text-xl font-bold mb-4">✨ Career Path Predictor</h3>
+                <p class="text-gray-700 mb-4">Curious about Nathaniel's hilariously unexpected future? Click below for a glimpse!</p>
+                <button id="predict-career-btn" class="bg-[#7E57C2] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#673AB7] transition-colors duration-200 flex items-center">
+                    Predict My Absurd Future
+                    <span id="career-spinner" class="loading-spinner hidden"></span>
+                </button>
+                <div id="career-result" class="mt-4 p-4 bg-[#F3E5F5] rounded-lg text-gray-800 hidden"></div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h3 class="text-xl font-bold mb-4">✨ Interview Question Generator</h3>
+                <p class="text-gray-700 mb-4">Prepare for the most challenging interview of your life (or just laugh at it).</p>
+                <button id="generate-interview-btn" class="bg-[#5C6BC0] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#3F51B5] transition-colors duration-200 flex items-center">
+                    Generate Absurd Interview Question
+                    <span id="interview-spinner" class="loading-spinner hidden"></span>
+                </button>
+                <div id="interview-result" class="mt-4 p-4 bg-[#E8EAF6] rounded-lg text-gray-800 hidden"></div>
+            </div>
+        </div>
+
         <div id="credentials" class="content-section">
             <h2 class="text-3xl font-bold mb-2">Credentials (Proof I'm Not a Fraud, Probably)</h2>
             <p class="text-lg text-gray-600 mb-8">I've collected more certificates than a professional student. Here are a few to prove I occasionally leave my house (virtually).</p>
@@ -228,6 +271,86 @@
             const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
             const openMobileNavBtn = document.getElementById('open-mobile-nav');
             const closeMobileNavBtn = document.getElementById('close-mobile-nav');
+
+            const predictCareerBtn = document.getElementById('predict-career-btn');
+            const careerSpinner = document.getElementById('career-spinner');
+            const careerResult = document.getElementById('career-result');
+
+            const generateInterviewBtn = document.getElementById('generate-interview-btn');
+            const interviewSpinner = document.getElementById('interview-spinner');
+            const interviewResult = document.getElementById('interview-result');
+
+            const resumeContent = `
+                Nathaniel Ross
+                Professional Summary: Al-Driven Solutions Architect & Humanitarian Technologist
+                Passionate full-stack engineer and Al innovator with 8+ years of experience building technology that creates measurable social impact. Currently leading digital transformation at Ineffable Films and pioneering disaster response solutions as Founder of Al Relief, where proprietary Al algorithms have improved emergency response times by 43% across partner organizations.
+
+                Core Expertise:
+                • Al & Machine Learning: NLP, Computer Vision, Multi-Agent Systems, LangChain, Retrieval-Augmented Generation (RAG)
+                • Full-Stack Development: React, Node.js, Django, Python, JavaScript, cloud-native architectures
+                • Cloud & DevOps: AWS, Azure, GCP, Docker, Kubernetes, CI/CD, microservices
+                • Leadership: Managing cross-functional teams up to 10 professionals, from Al researchers to marketing Specialists
+
+                Recent Impact:
+                • Founded Al Relief, developing computer vision models for disaster damage assessment with 72% accuracy and 28% faster analysis than traditional methods
+                • Led digital initiatives resulting in 50% increase in program applications from underrepresented youth
+                • Built donation systems that increased monthly recurring donations by 35%
+                • Deployed multi-agent Al systems for crisis response, serving disaster-affected regions globally
+
+                Unique Value Proposition: Combining 7+ years as a medical/legal interpreter with cutting-edge technical skills, I bring deep cross-cultural communication abilities and human-centered design thinking to every project. This background ensures solutions are not only technically robust but accessible and meaningful to diverse communities.
+            `;
+
+            async function callGeminiAPI(prompt, resultElement, spinnerElement) {
+                resultElement.classList.add('hidden');
+                spinnerElement.classList.remove('hidden');
+                resultElement.innerHTML = '';
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        resultElement.innerHTML = text.replace(/\n/g, '<br>');
+                    } else {
+                        resultElement.innerHTML = 'Error: Could not get a response from Gemini API.';
+                    }
+                } catch (error) {
+                    console.error('Error calling Gemini API:', error);
+                    resultElement.innerHTML = 'Error: Failed to connect to Gemini API.';
+                } finally {
+                    spinnerElement.classList.add('hidden');
+                    resultElement.classList.remove('hidden');
+                }
+            }
+
+            predictCareerBtn.addEventListener('click', () => {
+                const prompt = `Based on the following funny resume, what is the most hilariously absurd and unexpected future career path for this individual? Be creative and provide a short, funny explanation.
+
+                Resume:
+                ${resumeContent}`;
+                callGeminiAPI(prompt, careerResult, careerSpinner);
+            });
+
+            generateInterviewBtn.addEventListener('click', () => {
+                const prompt = `Given this funny resume, generate one extremely challenging and slightly absurd interview question that would truly test this candidate's unique 'skills'. Then, provide a short, equally absurd and humorous ideal answer.
+
+                Resume:
+                ${resumeContent}`;
+                callGeminiAPI(prompt, interviewResult, interviewSpinner);
+            });
+
 
             const workExperience = [
                 {
@@ -358,7 +481,7 @@
                     e.preventDefault();
                     const hash = this.getAttribute('href');
                     navigate(hash);
-                    window.location.hash = hash;
+                    // Removed window.location.hash = hash; due to security restrictions in iframe
                 });
             });
 
@@ -382,7 +505,13 @@
             new Chart(powersCtx, {
                 type: 'radar',
                 data: {
-                    labels: ['AI & ML (Napping Like a Pro)', 'Full-Stack (Fluffy Code)', 'Cloud & DevOps (Coffee In, Code Done)', 'Leadership (Organized Chaos)', 'Problem Solving (Googling)'],
+                     labels: [
+                        ['AI & ML', '(Napping Like a Pro)'],
+                        ['Full-Stack', '(Fluffy Code)'],
+                        ['Cloud & DevOps', '(Coffee In, Code Done)'],
+                        ['Leadership', '(Organized Chaos)'],
+                        ['Problem Solving', '(Googling)']
+                    ],
                     datasets: [{
                         label: 'Skillz-O-Meter',
                         data: [92, 85, 75, 88, 99],
@@ -391,12 +520,14 @@
                         pointBackgroundColor: 'rgba(126, 87, 194, 1)',
                         pointBorderColor: '#fff',
                         pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: 'rgba(126, 87, 194, 1)'
+                        pointHoverBorderColor: 'rgba(126, 87, 194, 1)',
+                        pointRadius: 5, /* Increased point size */
+                        pointHoverRadius: 7 /* Increased point hover size */
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: false, /* Changed to false */
                     scales: {
                         r: {
                             angleLines: {
@@ -407,7 +538,8 @@
                              pointLabels: {
                                 font: {
                                     size: 12
-                                }
+                                },
+                                padding: 40
                             },
                             ticks: {
                                 backdropColor: '#FDFBF8'
