@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nathaniel Ross - Interactive Resume</title>
+    <title>Nathaniel 'The Manipulator' Ross - Interactive Resume</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,9 +67,61 @@
                 height: 400px;
             }
         }
+        /* Mobile navigation specific styles */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            display: none;
+        }
+        .mobile-nav-overlay.active {
+            display: block;
+        }
+        .mobile-nav-sidebar {
+            position: fixed;
+            top: 0;
+            left: -256px; /* Hidden by default */
+            width: 256px;
+            height: 100%;
+            background-color: #F5F1EC;
+            padding: 1.5rem;
+            z-index: 50;
+            transition: left 0.3s ease-in-out;
+        }
+        .mobile-nav-sidebar.active {
+            left: 0;
+        }
     </style>
 </head>
 <body class="flex min-h-screen">
+    <!-- Mobile Navigation Overlay -->
+    <div id="mobile-nav-overlay" class="mobile-nav-overlay lg:hidden"></div>
+
+    <!-- Mobile Navigation Sidebar -->
+    <aside id="mobile-nav-sidebar" class="mobile-nav-sidebar lg:hidden flex-col">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-[#6A5A4F]">Nathaniel Ross</h1>
+            <button id="close-mobile-nav" class="text-[#6A5A4F] text-2xl">✕</button>
+        </div>
+        <nav class="mt-4 flex flex-col space-y-2">
+            <a href="#home" class="nav-link font-medium rounded-lg px-4 py-2">🏠 Home</a>
+            <a href="#powers" class="nav-link font-medium rounded-lg px-4 py-2">⚡ My Secret Powers</a>
+            <a href="#experience" class="nav-link font-medium rounded-lg px-4 py-2">💼 Glorious Past</a>
+            <a href="#shenanigans" class="nav-link font-medium rounded-lg px-4 py-2">🎉 Shenanigans</a>
+            <a href="#credentials" class="nav-link font-medium rounded-lg px-4 py-2">🎓 Credentials</a>
+            <a href="#contact" class="nav-link font-medium rounded-lg px-4 py-2">📞 Stalk Me</a>
+        </nav>
+        <div class="mt-auto text-xs text-[#a4968c] pt-6">
+            <p>Built with caffeine & sarcasm.</p>
+            <p>&copy; 2025. All rights reserved (mostly).</p>
+        </div>
+    </aside>
+
+    <!-- Desktop Navigation Sidebar -->
     <aside class="w-64 bg-[#F5F1EC] p-6 hidden lg:flex flex-col fixed h-full">
         <h1 class="text-2xl font-bold text-[#6A5A4F]">Nathaniel Ross</h1>
         <p class="text-sm text-[#8c7a6f]">Esquire of Exertion</p>
@@ -88,6 +140,12 @@
     </aside>
 
     <main class="flex-1 lg:ml-64 p-4 sm:p-6 lg:p-10">
+        <!-- Mobile Header and Hamburger Menu -->
+        <header class="lg:hidden flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-[#6A5A4F]">Nathaniel Ross</h1>
+            <button id="open-mobile-nav" class="text-[#6A5A4F] text-3xl">☰</button>
+        </header>
+
         <div id="home" class="content-section active">
             <h2 class="text-3xl font-bold mb-2">The Grand Architect of Digital Shenanigans</h2>
             <p class="text-lg text-gray-600 mb-8">A passionate full-stack engineer and AI innovator with 8+ years of experience building technology that *appears* to create measurable social impact, but mostly just makes my cat famous on TikTok.</p>
@@ -166,6 +224,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             const navLinks = document.querySelectorAll('.nav-link');
             const contentSections = document.querySelectorAll('.content-section');
+            const mobileNavSidebar = document.getElementById('mobile-nav-sidebar');
+            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+            const openMobileNavBtn = document.getElementById('open-mobile-nav');
+            const closeMobileNavBtn = document.getElementById('close-mobile-nav');
 
             const workExperience = [
                 {
@@ -285,6 +347,10 @@
                         link.classList.remove('active');
                     }
                 });
+                
+                // Close mobile nav after navigation
+                mobileNavSidebar.classList.remove('active');
+                mobileNavOverlay.classList.remove('active');
             }
 
             navLinks.forEach(link => {
@@ -294,6 +360,22 @@
                     navigate(hash);
                     window.location.hash = hash;
                 });
+            });
+
+            // Mobile nav toggle
+            openMobileNavBtn.addEventListener('click', () => {
+                mobileNavSidebar.classList.add('active');
+                mobileNavOverlay.classList.add('active');
+            });
+
+            closeMobileNavBtn.addEventListener('click', () => {
+                mobileNavSidebar.classList.remove('active');
+                mobileNavOverlay.classList.remove('active');
+            });
+
+            mobileNavOverlay.addEventListener('click', () => {
+                mobileNavSidebar.classList.remove('active');
+                mobileNavOverlay.classList.remove('active');
             });
 
             const powersCtx = document.getElementById('powersChart').getContext('2d');
